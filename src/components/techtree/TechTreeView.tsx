@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from 'react';
 import * as d3 from 'd3';
 import { technologies, TECH_CATEGORY_COLORS, type Technology } from '@/data/techtree/technologies';
 import { formatYBP } from '@/lib/time/format';
+import { useAppStore } from '@/lib/store';
 
 interface Node extends d3.SimulationNodeDatum {
   id: string;
@@ -25,6 +26,7 @@ function getNodeRadius(tech: Technology): number {
 export function TechTreeView() {
   const svgRef = useRef<SVGSVGElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
+  const theme = useAppStore(s => s.theme);
   const [selectedTech, setSelectedTech] = useState<Technology | null>(null);
   const [highlightedIds, setHighlightedIds] = useState<Set<string>>(new Set());
   const simulationRef = useRef<d3.Simulation<Node, Link> | null>(null);
@@ -125,7 +127,7 @@ export function TechTreeView() {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#555');
+      .attr('fill', theme === 'dark' ? '#555' : '#94a3b8');
 
     // Dimmed arrow for unhighlighted edges
     g.select('defs')
@@ -139,7 +141,7 @@ export function TechTreeView() {
       .attr('orient', 'auto')
       .append('path')
       .attr('d', 'M0,-5L10,0L0,5')
-      .attr('fill', '#333');
+      .attr('fill', theme === 'dark' ? '#333' : '#64748b');
 
     // Highlighted arrow
     g.select('defs')
@@ -161,7 +163,7 @@ export function TechTreeView() {
       .selectAll<SVGLineElement, Link>('line')
       .data(links)
       .join('line')
-      .attr('stroke', '#555')
+      .attr('stroke', theme === 'dark' ? '#555' : '#94a3b8')
       .attr('stroke-opacity', 0.4)
       .attr('stroke-width', 1)
       .attr('marker-end', 'url(#arrowhead)');
@@ -174,7 +176,7 @@ export function TechTreeView() {
       .join('circle')
       .attr('r', (d) => d.radius)
       .attr('fill', (d) => TECH_CATEGORY_COLORS[d.tech.category] ?? '#888')
-      .attr('stroke', '#222')
+      .attr('stroke', theme === 'dark' ? '#222' : '#cbd5e1')
       .attr('stroke-width', 1.5)
       .attr('cursor', 'pointer');
 
@@ -186,7 +188,7 @@ export function TechTreeView() {
       .join('text')
       .text((d) => d.tech.name)
       .attr('font-size', 9)
-      .attr('fill', '#ccc')
+      .attr('fill', theme === 'dark' ? '#ccc' : '#334155')
       .attr('text-anchor', 'middle')
       .attr('dy', (d) => d.radius + 12)
       .attr('pointer-events', 'none');
@@ -316,11 +318,11 @@ export function TechTreeView() {
     svg.selectAll<SVGCircleElement, Node>('circle').each(function (d) {
       const el = d3.select(this);
       if (!hasHighlight) {
-        el.attr('opacity', 1).attr('stroke', '#222').attr('stroke-width', 1.5);
+        el.attr('opacity', 1).attr('stroke', theme === 'dark' ? '#222' : '#cbd5e1').attr('stroke-width', 1.5);
       } else if (highlightedIds.has(d.id)) {
         el.attr('opacity', 1).attr('stroke', '#facc15').attr('stroke-width', 2.5);
       } else {
-        el.attr('opacity', 0.15).attr('stroke', '#222').attr('stroke-width', 1);
+        el.attr('opacity', 0.15).attr('stroke', theme === 'dark' ? '#222' : '#cbd5e1').attr('stroke-width', 1);
       }
     });
 
@@ -329,7 +331,7 @@ export function TechTreeView() {
       const srcId = typeof d.source === 'string' ? d.source : (d.source as Node).id;
       const tgtId = typeof d.target === 'string' ? d.target : (d.target as Node).id;
       if (!hasHighlight) {
-        el.attr('stroke', '#555')
+        el.attr('stroke', theme === 'dark' ? '#555' : '#94a3b8')
           .attr('stroke-opacity', 0.4)
           .attr('stroke-width', 1)
           .attr('marker-end', 'url(#arrowhead)');
@@ -339,7 +341,7 @@ export function TechTreeView() {
           .attr('stroke-width', 2)
           .attr('marker-end', 'url(#arrowhead-hl)');
       } else {
-        el.attr('stroke', '#333')
+        el.attr('stroke', theme === 'dark' ? '#333' : '#cbd5e1')
           .attr('stroke-opacity', 0.1)
           .attr('stroke-width', 0.5)
           .attr('marker-end', 'url(#arrowhead-dim)');
@@ -351,9 +353,9 @@ export function TechTreeView() {
       if (!hasHighlight) {
         el.attr('opacity', 1);
       } else if (highlightedIds.has(d.id)) {
-        el.attr('opacity', 1).attr('fill', '#fff');
+        el.attr('opacity', 1).attr('fill', theme === 'dark' ? '#fff' : '#111');
       } else {
-        el.attr('opacity', 0.1).attr('fill', '#ccc');
+        el.attr('opacity', 0.1).attr('fill', theme === 'dark' ? '#ccc' : '#334155');
       }
     });
   }, [highlightedIds]);
@@ -362,7 +364,7 @@ export function TechTreeView() {
     <div className="relative flex h-full w-full flex-col bg-background">
       {/* Legend */}
       <div className="flex flex-wrap items-center gap-4 border-b border-gray-800 px-4 py-2">
-        <span className="text-xs font-semibold text-gray-400 uppercase tracking-wide">
+        <span className="text-xs font-semibold text-muted uppercase tracking-wide">
           Tech Tree
         </span>
         {Object.entries(TECH_CATEGORY_COLORS).map(([cat, color]) => (
@@ -371,11 +373,11 @@ export function TechTreeView() {
               className="inline-block h-3 w-3 rounded-full"
               style={{ backgroundColor: color }}
             />
-            <span className="text-xs capitalize text-gray-300">{cat}</span>
+            <span className="text-xs capitalize text-foreground">{cat}</span>
           </div>
         ))}
         {selectedTech && (
-          <div className="ml-auto flex items-center gap-2 text-xs text-gray-400">
+          <div className="ml-auto flex items-center gap-2 text-xs text-muted">
             <span>
               Selected:{' '}
               <strong style={{ color: TECH_CATEGORY_COLORS[selectedTech.category] }}>
@@ -383,7 +385,7 @@ export function TechTreeView() {
               </strong>
             </span>
             <button
-              className="rounded bg-gray-700 px-2 py-0.5 text-gray-300 hover:bg-gray-600"
+              className="rounded bg-surface-hover px-2 py-0.5 text-foreground hover:bg-border"
               onClick={() => {
                 setSelectedTech(null);
                 setHighlightedIds(new Set());

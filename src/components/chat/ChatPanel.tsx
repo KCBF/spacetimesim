@@ -5,6 +5,19 @@ import { useChatStore } from '@/lib/chat-store';
 import { ChatHistory } from './ChatHistory';
 import { ChatSettings } from './ChatSettings';
 
+const MAX_INPUT_LENGTH = 2000;
+
+function simpleMarkdown(text: string): string {
+  return text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\*(.+?)\*/g, '<em>$1</em>')
+    .replace(/^- (.+)$/gm, '<li>$1</li>')
+    .replace(/(<li>.*<\/li>\n?)+/g, '<ul>$&</ul>')
+    .replace(/^\d+\. (.+)$/gm, '<li>$1</li>')
+    .replace(/\n/g, '<br/>');
+}
+
 export function ChatPanel() {
   const isOpen = useChatStore(s => s.isOpen);
   const toggleChat = useChatStore(s => s.toggleChat);
@@ -138,7 +151,12 @@ export function ChatPanel() {
                       : 'bg-surface-hover text-foreground rounded-bl-sm'
                   }`}
                 >
-                  <div className="whitespace-pre-wrap break-words">{msg.content}</div>
+                  <div
+                    className="whitespace-pre-wrap break-words prose-sm [&_strong]:font-bold [&_ul]:list-disc [&_ul]:pl-4 [&_ol]:list-decimal [&_ol]:pl-4 [&_li]:my-0.5"
+                    dangerouslySetInnerHTML={msg.role === 'assistant' ? { __html: simpleMarkdown(msg.content) } : undefined}
+                  >
+                    {msg.role === 'user' ? msg.content : undefined}
+                  </div>
                   <div className={`text-[10px] mt-1 ${msg.role === 'user' ? 'text-indigo-200' : 'text-gray-500'}`}>
                     {new Date(msg.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                   </div>
@@ -161,10 +179,14 @@ export function ChatPanel() {
 
           {/* Input */}
           <div className="p-3 border-t border-border">
+            {input.length > MAX_INPUT_LENGTH - 200 && (
+              <div className="text-[10px] text-red-400 mb-1">{input.length}/{MAX_INPUT_LENGTH} characters</div>
+            )}
             <div className="flex gap-2">
               <textarea
                 ref={inputRef}
                 value={input}
+                maxLength={MAX_INPUT_LENGTH}
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about history, civilizations, or the future..."

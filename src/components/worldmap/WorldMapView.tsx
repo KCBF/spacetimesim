@@ -80,7 +80,7 @@ export function WorldMapView() {
   const [worldData, setWorldData] = useState<GeoFeatureCollection | null>(null);
   const [currentYBP, setCurrentYBP] = useState(-2_000);
   const [dimensions, setDimensions] = useState({ width: 960, height: 500 });
-  const { selectedEventId, setSelectedEventId, activeCategories, minSignificance } = useAppStore();
+  const { selectedEventId, setSelectedEventId, activeCategories, minSignificance, theme } = useAppStore();
 
   // Load world atlas data
   useEffect(() => {
@@ -166,7 +166,7 @@ export function WorldMapView() {
       .append('rect')
       .attr('width', width)
       .attr('height', height)
-      .attr('fill', '#0a0a0f');
+      .attr('fill', theme === 'dark' ? '#0a0a0f' : '#f8fafc');
 
     // Graticule
     const graticule = d3.geoGraticule();
@@ -175,7 +175,7 @@ export function WorldMapView() {
       .datum(graticule())
       .attr('d', pathGenerator as any)
       .attr('fill', 'none')
-      .attr('stroke', '#1a1a2e')
+      .attr('stroke', theme === 'dark' ? '#1a1a2e' : '#cbd5e1')
       .attr('stroke-width', 0.5);
 
     // Sphere outline
@@ -184,7 +184,7 @@ export function WorldMapView() {
       .datum({ type: 'Sphere' } as any)
       .attr('d', pathGenerator as any)
       .attr('fill', 'none')
-      .attr('stroke', '#2a2a3e')
+      .attr('stroke', theme === 'dark' ? '#2a2a3e' : '#94a3b8')
       .attr('stroke-width', 1);
 
     // Countries
@@ -195,8 +195,8 @@ export function WorldMapView() {
       .enter()
       .append('path')
       .attr('d', pathGenerator as any)
-      .attr('fill', '#1a1a2e')
-      .attr('stroke', '#2a2a3e')
+      .attr('fill', theme === 'dark' ? '#1a1a2e' : '#e2e8f0')
+      .attr('stroke', theme === 'dark' ? '#2a2a3e' : '#94a3b8')
       .attr('stroke-width', 0.5);
 
     // Region highlight overlays
@@ -259,7 +259,7 @@ export function WorldMapView() {
         .attr('r', isSelected ? radius + 3 : radius)
         .attr('fill', color)
         .attr('opacity', event.isFuture ? 0.5 : 0.8)
-        .attr('stroke', isSelected ? '#ffffff' : 'none')
+        .attr('stroke', isSelected ? (theme === 'dark' ? '#ffffff' : '#000000') : 'none')
         .attr('stroke-width', isSelected ? 2 : 0)
         .attr('cursor', 'pointer')
         .attr('class', 'event-dot');
@@ -368,28 +368,28 @@ export function WorldMapView() {
         {/* Loading state */}
         {!worldData && (
           <div className="absolute inset-0 flex items-center justify-center">
-            <div className="text-gray-500 text-sm">Loading world map...</div>
+            <div className="text-muted text-sm">Loading world map...</div>
           </div>
         )}
 
         {/* Event count badge */}
-        <div className="absolute top-3 left-3 px-3 py-1.5 rounded bg-black/60 border border-gray-700 text-xs text-gray-300">
+        <div className="absolute top-3 left-3 px-3 py-1.5 rounded bg-surface/80 backdrop-blur-sm border border-border text-xs text-foreground">
           {visibleEvents.length} event{visibleEvents.length !== 1 ? 's' : ''} visible
         </div>
 
         {/* Era label */}
-        <div className="absolute top-3 right-3 px-3 py-1.5 rounded bg-black/60 border border-gray-700 text-xs text-gray-400">
+        <div className="absolute top-3 right-3 px-3 py-1.5 rounded bg-surface/80 backdrop-blur-sm border border-border text-xs text-muted">
           {eraLabel}
         </div>
       </div>
 
       {/* Time slider panel */}
-      <div className="flex-shrink-0 px-4 py-3 bg-black/50 border-t border-gray-800">
+      <div className="flex-shrink-0 px-4 py-3 bg-surface/80 border-t border-border">
         <div className="flex items-center justify-between mb-1.5">
-          <span className="text-xs text-gray-500 font-mono">13.8 Bya</span>
+          <span className="text-xs text-muted font-mono">13.8 Bya</span>
           <span
             className={`text-sm font-semibold font-mono ${
-              isSimulated ? 'text-pink-400' : 'text-gray-200'
+              isSimulated ? 'text-pink-400' : 'text-foreground'
             }`}
           >
             {formatYBP(currentYBP)}
@@ -399,7 +399,7 @@ export function WorldMapView() {
               </span>
             )}
           </span>
-          <span className="text-xs text-gray-500 font-mono">Future</span>
+          <span className="text-xs text-muted font-mono">Future</span>
         </div>
 
         <div className="relative">
@@ -443,7 +443,7 @@ export function WorldMapView() {
                   className="w-2 h-2 rounded-full"
                   style={{ backgroundColor: region.color }}
                 />
-                <span className="text-xs text-gray-400">
+                <span className="text-xs text-muted">
                   {getRegionDisplayName(region.id, currentYBP)}
                 </span>
               </div>
