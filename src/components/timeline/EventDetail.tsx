@@ -55,7 +55,7 @@ export function EventDetail() {
         </p>
 
         {/* Description */}
-        <p className="text-sm text-gray-300 mb-4 leading-relaxed">{event.description}</p>
+        <p className="text-sm text-muted mb-4 leading-relaxed">{event.description}</p>
 
         {/* Significance */}
         <div className="flex items-center gap-2 mb-3">
@@ -65,7 +65,7 @@ export function EventDetail() {
               <span
                 key={i}
                 className={`w-2 h-2 rounded-full ${
-                  i < event.significance ? 'bg-accent' : 'bg-gray-700'
+                  i < event.significance ? 'bg-accent' : 'bg-border'
                 }`}
               />
             ))}
@@ -76,7 +76,7 @@ export function EventDetail() {
         {event.isFuture && event.simulationConfidence !== undefined && (
           <div className="flex items-center gap-2 mb-3">
             <span className="text-xs text-muted">Confidence:</span>
-            <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+            <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
               <div
                 className="h-full bg-pink-500 rounded-full"
                 style={{ width: `${event.simulationConfidence * 100}%` }}

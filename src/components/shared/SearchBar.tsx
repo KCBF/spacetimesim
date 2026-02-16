@@ -44,10 +44,10 @@ export function SearchBar() {
         onChange={e => { setQuery(e.target.value); setIsOpen(true); }}
         onFocus={() => setIsOpen(true)}
         placeholder="Search events..."
-        className="w-48 lg:w-64 bg-gray-800 border border-border rounded-lg px-3 py-1.5 text-sm text-foreground placeholder-gray-500 focus:outline-none focus:border-accent"
+        className="w-48 lg:w-64 bg-surface border border-border rounded-lg px-3 py-1.5 text-sm text-foreground placeholder-muted focus:outline-none focus:border-accent"
       />
       {isOpen && results.length > 0 && (
-        <div className="absolute top-full mt-1 right-0 w-80 max-h-80 overflow-y-auto bg-gray-900 border border-border rounded-lg shadow-xl z-50">
+        <div className="absolute top-full mt-1 right-0 w-80 max-h-80 overflow-y-auto bg-surface border border-border rounded-lg shadow-xl z-50">
           {results.map(({ item }) => (
             <button
               key={item.id}

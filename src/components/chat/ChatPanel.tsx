@@ -65,7 +65,7 @@ export function ChatPanel() {
   return (
     <div className="fixed bottom-20 right-4 z-50 w-96 h-[32rem] flex flex-col bg-surface border border-border rounded-xl shadow-2xl overflow-hidden">
       {/* Header */}
-      <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-gray-900">
+      <div className="flex items-center justify-between px-3 py-2 border-b border-border bg-surface-hover">
         <div className="flex items-center gap-2">
           <span className="w-2 h-2 rounded-full bg-green-500" />
           <span className="text-sm font-semibold text-foreground">Spacetime AI</span>
@@ -135,7 +135,7 @@ export function ChatPanel() {
                   className={`max-w-[85%] px-3 py-2 rounded-lg text-sm leading-relaxed ${
                     msg.role === 'user'
                       ? 'bg-accent text-white rounded-br-sm'
-                      : 'bg-gray-800 text-gray-200 rounded-bl-sm'
+                      : 'bg-surface-hover text-foreground rounded-bl-sm'
                   }`}
                 >
                   <div className="whitespace-pre-wrap break-words">{msg.content}</div>
@@ -147,7 +147,7 @@ export function ChatPanel() {
             ))}
             {isLoading && (
               <div className="flex justify-start">
-                <div className="bg-gray-800 px-3 py-2 rounded-lg rounded-bl-sm">
+                <div className="bg-surface-hover px-3 py-2 rounded-lg rounded-bl-sm">
                   <div className="flex gap-1">
                     <span className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '0ms' }} />
                     <span className="w-2 h-2 rounded-full bg-gray-500 animate-bounce" style={{ animationDelay: '150ms' }} />
@@ -168,7 +168,7 @@ export function ChatPanel() {
                 onChange={e => setInput(e.target.value)}
                 onKeyDown={handleKeyDown}
                 placeholder="Ask about history, civilizations, or the future..."
-                className="flex-1 bg-gray-800 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-gray-500 resize-none focus:outline-none focus:border-accent"
+                className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-muted resize-none focus:outline-none focus:border-accent"
                 rows={1}
               />
               <button

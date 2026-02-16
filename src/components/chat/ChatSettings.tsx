@@ -38,7 +38,7 @@ export function ChatSettings() {
               value={keyInput}
               onChange={e => setKeyInput(e.target.value)}
               placeholder="sk-ant-..."
-              className="w-full bg-gray-800 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:outline-none focus:border-accent pr-10"
+              className="w-full bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-accent pr-10"
             />
             <button
               onClick={() => setShowKey(!showKey)}
@@ -67,7 +67,7 @@ export function ChatSettings() {
           {keyInput && (
             <button
               onClick={handleClearKey}
-              className="px-3 py-1.5 text-xs rounded-lg bg-gray-800 text-muted hover:text-foreground border border-border transition-colors"
+              className="px-3 py-1.5 text-xs rounded-lg bg-surface text-muted hover:text-foreground border border-border transition-colors"
             >
               Clear
             </button>

@@ -1,6 +1,7 @@
 'use client';
 
 import { useAppStore } from '@/lib/store';
+import { useDisplayStore } from '@/lib/display-store';
 import { Header } from './Header';
 import { TabNav } from './TabNav';
 import { TimelineView } from '@/components/timeline/TimelineView';
@@ -9,55 +10,40 @@ import { DemographicsView } from '@/components/demographics/DemographicsView';
 import { TechTreeView } from '@/components/techtree/TechTreeView';
 import { EconomyView } from '@/components/economy/EconomyView';
 import { ChronicleView } from '@/components/chronicle/ChronicleView';
+import { DataHubView } from '@/components/datahub/DataHubView';
+import { MarketsView } from '@/components/markets/MarketsView';
 import { ChatPanel } from '@/components/chat/ChatPanel';
-import { StubPage } from '@/components/shared/StubPage';
-
-const STUB_DESCRIPTIONS: Record<string, { title: string; description: string }> = {
-  worldmap: {
-    title: 'World Map',
-    description: 'Interactive D3-geo projection showing era-based political boundaries, trade routes, and migration patterns across time.',
-  },
-  demographics: {
-    title: 'Demographics',
-    description: 'Population area charts per region, showing growth curves, urbanization trends, and demographic transitions.',
-  },
-  techtree: {
-    title: 'Tech Tree',
-    description: 'DAG visualization of invention prerequisites — from fire to fusion, showing how technologies depend on and enable each other.',
-  },
-  economy: {
-    title: 'Economy',
-    description: 'Economic output, trade flows, and resource distribution across civilizations and eras.',
-  },
-  chronicle: {
-    title: 'Chronicle',
-    description: 'Vertical scrolling event feed with rich detail cards, filtering, and search across all recorded events.',
-  },
-};
+import { SettingsPanel } from '@/components/shared/SettingsPanel';
+import { ThemeInit } from './ThemeInit';
 
 export function AppShell() {
   const activeTab = useAppStore(s => s.activeTab);
+  const showSettings = useDisplayStore(s => s.showSettingsPanel);
 
   const renderTab = () => {
     switch (activeTab) {
       case 'timeline': return <TimelineView />;
+      case 'datahub': return <DataHubView />;
+      case 'markets': return <MarketsView />;
       case 'worldmap': return <WorldMapView />;
       case 'demographics': return <DemographicsView />;
       case 'techtree': return <TechTreeView />;
       case 'economy': return <EconomyView />;
       case 'chronicle': return <ChronicleView />;
-      default: return <StubPage title={activeTab} description="Coming soon." />;
+      default: return <DataHubView />;
     }
   };
 
   return (
     <div className="h-screen flex flex-col bg-background">
+      <ThemeInit />
       <Header />
       <TabNav />
       <main className="flex-1 overflow-hidden">
         {renderTab()}
       </main>
       <ChatPanel />
+      {showSettings && <SettingsPanel />}
     </div>
   );
 }

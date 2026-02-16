@@ -12,6 +12,7 @@ export function Minimap() {
   const containerRef = useRef<HTMLDivElement>(null);
   const viewport = useAppStore(s => s.viewport);
   const setViewport = useAppStore(s => s.setViewport);
+  const theme = useAppStore(s => s.theme);
 
   const draw = useCallback(() => {
     const canvas = canvasRef.current;
@@ -27,7 +28,7 @@ export function Minimap() {
     if (!ctx) return;
 
     // Background
-    ctx.fillStyle = '#0f172a';
+    ctx.fillStyle = theme === 'dark' ? '#0f172a' : '#e5e7eb';
     ctx.fillRect(0, 0, width, height);
 
     // Era bands
@@ -48,7 +49,7 @@ export function Minimap() {
     ctx.strokeRect(vpX1, 1, vpWidth, height - 2);
     ctx.fillStyle = 'rgba(99, 102, 241, 0.15)';
     ctx.fillRect(vpX1, 1, vpWidth, height - 2);
-  }, [viewport]);
+  }, [viewport, theme]);
 
   useEffect(() => {
     draw();

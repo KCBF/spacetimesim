@@ -52,7 +52,7 @@ export function ChronicleView() {
               value={searchQuery}
               onChange={e => setSearchQuery(e.target.value)}
               placeholder="Search all events..."
-              className="flex-1 bg-gray-800 border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-gray-500 focus:outline-none focus:border-accent"
+              className="flex-1 bg-surface border border-border rounded-lg px-3 py-2 text-sm text-foreground placeholder-muted focus:outline-none focus:border-accent"
             />
             <select
               value={categoryFilter}
@@ -98,7 +98,7 @@ export function ChronicleView() {
                   {Array.from({ length: 5 }).map((_, i) => (
                     <span
                       key={i}
-                      className={`w-1.5 h-1.5 rounded-full ${i < event.significance ? 'bg-accent' : 'bg-gray-700'}`}
+                      className={`w-1.5 h-1.5 rounded-full ${i < event.significance ? 'bg-accent' : 'bg-border'}`}
                     />
                   ))}
                 </div>
@@ -127,7 +127,7 @@ export function ChronicleView() {
 
             <h2 className="text-xl font-bold text-foreground mb-1">{selectedEvent.name}</h2>
             <p className="text-sm text-muted mb-4">{formatYBP(selectedEvent.yearYBP)}</p>
-            <p className="text-sm text-gray-300 leading-relaxed mb-4">{selectedEvent.description}</p>
+            <p className="text-sm text-muted leading-relaxed mb-4">{selectedEvent.description}</p>
 
             <div className="flex items-center gap-2 mb-3">
               <span className="text-xs text-muted">Region:</span>
@@ -138,7 +138,7 @@ export function ChronicleView() {
               <span className="text-xs text-muted">Significance:</span>
               <div className="flex gap-0.5">
                 {Array.from({ length: 5 }).map((_, i) => (
-                  <span key={i} className={`w-2 h-2 rounded-full ${i < selectedEvent.significance ? 'bg-accent' : 'bg-gray-700'}`} />
+                  <span key={i} className={`w-2 h-2 rounded-full ${i < selectedEvent.significance ? 'bg-accent' : 'bg-border'}`} />
                 ))}
               </div>
             </div>
@@ -146,7 +146,7 @@ export function ChronicleView() {
             {selectedEvent.isFuture && selectedEvent.simulationConfidence !== undefined && (
               <div className="flex items-center gap-2 mb-4">
                 <span className="text-xs text-muted">Confidence:</span>
-                <div className="flex-1 h-1.5 bg-gray-700 rounded-full overflow-hidden">
+                <div className="flex-1 h-1.5 bg-border rounded-full overflow-hidden">
                   <div className="h-full bg-pink-500 rounded-full" style={{ width: `${selectedEvent.simulationConfidence * 100}%` }} />
                 </div>
                 <span className="text-xs text-muted">{Math.round(selectedEvent.simulationConfidence * 100)}%</span>

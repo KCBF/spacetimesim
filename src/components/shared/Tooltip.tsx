@@ -32,7 +32,7 @@ export function Tooltip({ x, y, children, visible }: TooltipProps) {
   return (
     <div
       ref={ref}
-      className="fixed z-50 pointer-events-none px-3 py-2 rounded-lg bg-gray-900 border border-border shadow-xl text-sm max-w-xs"
+      className="fixed z-50 pointer-events-none px-3 py-2 rounded-lg bg-surface border border-border shadow-xl text-sm max-w-xs"
       style={{ left: x + offset.x, top: y + offset.y }}
     >
       {children}

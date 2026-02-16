@@ -13,9 +13,15 @@ import {
   SIMULATION_BOUNDARY_YBP,
 } from './time/constants';
 
-export type TabId = 'timeline' | 'worldmap' | 'demographics' | 'techtree' | 'economy' | 'chronicle';
+export type TabId = 'timeline' | 'datahub' | 'worldmap' | 'demographics' | 'techtree' | 'economy' | 'chronicle' | 'markets';
+
+export type Theme = 'light' | 'dark';
 
 interface AppState {
+  // Theme
+  theme: Theme;
+  toggleTheme: () => void;
+
   // Viewport
   viewport: Viewport;
   setViewport: (viewport: Viewport) => void;
@@ -62,7 +68,32 @@ const ERA_JUMPS: Record<string, { startYBP: number; endYBP: number }> = {
   'future': { startYBP: -10, endYBP: 200 },
 };
 
+function getInitialTheme(): Theme {
+  if (typeof window === 'undefined') return 'light';
+  const stored = localStorage.getItem('spacetime-theme');
+  if (stored === 'dark' || stored === 'light') return stored;
+  return 'light';
+}
+
+function applyTheme(theme: Theme) {
+  if (typeof window === 'undefined') return;
+  const root = document.documentElement;
+  if (theme === 'dark') {
+    root.classList.add('dark');
+  } else {
+    root.classList.remove('dark');
+  }
+  localStorage.setItem('spacetime-theme', theme);
+}
+
 export const useAppStore = create<AppState>((set, get) => ({
+  theme: 'light' as Theme,
+  toggleTheme: () => {
+    const next = get().theme === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    set({ theme: next });
+  },
+
   viewport: DEFAULT_VIEWPORT,
   setViewport: (viewport) => set({ viewport: clampViewport(viewport) }),
 
