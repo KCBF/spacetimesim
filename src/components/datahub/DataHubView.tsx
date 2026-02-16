@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from 'react';
 import { useDisplayStore } from '@/lib/display-store';
-import { countries as countriesImport } from '@/data/countries/stub';
+import { countries as countriesImport } from '@/data/countries/index';
 import { DATA_CATEGORIES } from '@/data/countries/categories';
 
 const countriesData = countriesImport || [];
